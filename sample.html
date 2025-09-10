@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Age Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-400 via-blue-100 to-blue-400 flex justify-center items-center min-h-screen font-sans">
+
+
+  <div class="max-w-md w-full bg-white/70 shadow-lg p-8">
+    <h3 class="text-center text-2xl font-semibold mb-6">Advanced Age Calculator</h3>
+    
+    <div class="mb-4">
+      <input type="text" id="name" class="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name">
+    </div>
+    <div class="mb-4">
+      <input type="date" id="dob" class="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+    <div class="mb-4">
+      <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2" onclick="calculateAge()">Calculate Age</button>
+    </div>
+    
+    <div id="output" class="text-center mt-4 text-gray-700"></div>
+  </div>
+
+  <script>
+    function calculateAge() {
+      const name = document.getElementById("name").value;
+      const dobInput = document.getElementById("dob").value;
+      const output = document.getElementById("output");
+
+      if (!name || !dobInput) {
+        output.innerHTML = <p class="text-red-600 font-medium">Please enter both name and date of birth.</p>;
+        return;
+      }
+
+      const dob = new Date(dobInput);
+      const today = new Date();
+
+      let years = today.getFullYear() - dob.getFullYear();
+      let months = today.getMonth() - dob.getMonth();
+      let days = today.getDate() - dob.getDate();
+
+      if (days < 0) {
+        months--;
+        days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      const weekdays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+      const dayOfWeek = weekdays[dob.getDay()];
+
+      // Next birthday
+      let nextBirthday = new Date(today.getFullYear(), dob.getMonth(), dob.getDate());
+      if (nextBirthday < today) {
+        nextBirthday.setFullYear(today.getFullYear() + 1);
+      }
+      const diffTime = nextBirthday - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      output.innerHTML = `
+        <h5 class="text-lg font-semibold">Hello ${name}!</h5>
+        <p>You are <span class="font-medium">${years} years, ${months} months, ${days} days</span> old.</p>
+        <p>You were born on a <span class="font-medium">${dayOfWeek}</span>.</p>
+        <p>Your next birthday is in <span class="font-medium">${diffDays} days</span>.</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
